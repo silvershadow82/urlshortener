@@ -10,7 +10,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -34,9 +33,9 @@ public class UrlShortenerController {
         return new URLResponseDTO(urlRequestDTO.getUrl(), shortURL.toString());
     }
 
-    @RequestMapping(value = "/go/{url}", method = RequestMethod.GET)
-    public ModelAndView goToOriginalURL(@PathVariable("url") String shortUrl) throws IOException {
-        String originalURL = converterService.getOriginalString(shortUrl);
+    @RequestMapping(value = "/go/{alias}", method = RequestMethod.GET)
+    public ModelAndView goToOriginalURL(@PathVariable("alias") String alias) throws IOException {
+        String originalURL = converterService.getOriginalString(alias);
 
         if(originalURL.isEmpty())
             throw new NotFoundException();

@@ -1,0 +1,4 @@
+---
+converter:
+  hex-radix: 16
+  max-hex-length: 7

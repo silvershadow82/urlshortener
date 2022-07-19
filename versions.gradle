@@ -1,0 +1,15 @@
+ext {
+    springBootVersion = '2.6.2'
+    junitVersion = '4.12'
+    httpClientVersion = '4.5.2'
+}
+
+dependencies {
+    constraints {
+        implementation "org.springframework.boot:spring-boot-started-web:${springBootVersion}"
+
+        testImplementation "junit:junit:${junitVersion}"
+        testImplementation "org.springframework.boot:spring-boot-started-test:${springBootVersion}"
+        testImplementation "org.apache.httpcomponents:httpclient:${httpClientVersion}"
+    }
+}

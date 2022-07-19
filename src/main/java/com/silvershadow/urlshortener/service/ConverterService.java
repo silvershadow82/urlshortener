@@ -1,5 +1,6 @@
 package com.silvershadow.urlshortener.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -13,15 +14,17 @@ import java.util.Map;
 public class ConverterService {
 
     private static final int HEX_RADIX = 16;
-    private static final int MAX_HEX_LENGTH = 7;
 
-    private List<String> elements = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+    @Value("${converter.max-hex-length}")
+    private int maxHexLength;
+
+    private final List<String> elements = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
                 "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4",
                 "5", "6", "7", "8", "9", "0", "A", "B", "C", "D", "E", "F", "G", "H", "I",
                 "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
                 "Y", "Z");
 
-    private Map<String, String> storageMap = new HashMap<>();
+    private final Map<String, String> storageMap = new HashMap<>();
 
     /**
      * Take a string and find a shortened version accoring to built-in alphabet
@@ -33,7 +36,7 @@ public class ConverterService {
             return "";
 
         String hexString = DigestUtils.md5DigestAsHex(value.getBytes(Charset.defaultCharset()));
-        String hexKey = hexString.substring(0, MAX_HEX_LENGTH);
+        String hexKey = hexString.substring(0, maxHexLength);
 
         storageMap.putIfAbsent(hexKey, value);
 
@@ -60,7 +63,7 @@ public class ConverterService {
 
         String hexKey = Long.toHexString(value);
 
-        return storageMap.containsKey(hexKey) ? storageMap.get(hexKey) : "";
+        return storageMap.getOrDefault(hexKey, "");
     }
 
     private long convertHexString(String hexString) {
@@ -71,15 +74,15 @@ public class ConverterService {
         if (0 == number)
             return "0";
 
-        String value = "";
+        StringBuilder sb = new StringBuilder();
         long remainder;
 
         while (number > 0) {
             remainder = number % base;
-            value = elements.get((int) remainder) + value;
+            sb.append(elements.get((int)remainder));
             number = number / base;
         }
 
-        return value;
+        return sb.reverse().toString();
     }
 }
